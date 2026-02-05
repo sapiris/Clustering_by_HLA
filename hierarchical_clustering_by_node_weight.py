@@ -146,7 +146,14 @@ def ward_with_min_size(dist_matrix, pops_list, num_clusters, dict_pop_size, f_cl
         # Extract the column and row names
         race1 = min_value_indices[0][0]
         race2 = min_value_indices[0][1]
-        min_pair = [race1, race2]
+        min_pair = []
+        min_value = d.min().min()
+        min_pairs = [
+            (row, col)
+            for row, col in zip(*np.where(d.values == min_value))
+        ]
+        min_pair = [(d.index[i], d.columns[j]) for i, j in min_pairs][0]
+        min_pair = [min_pair[0], min_pair[1]]
 
         list_dist = []
         c_i = min_pair[0]
@@ -235,6 +242,7 @@ def main(num_clusters, f_races_size_path, f_cluster_path, simulation, path_outpu
     dict_pop_size = clusters_size(f_races_size_path)
 
     ward_with_min_size(dist_matrix, list(dict_pop_size.keys()), num_clusters, dict_pop_size, f_cluster_path, 1 / 10)
+
 
 
 
