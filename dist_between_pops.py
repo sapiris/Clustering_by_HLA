@@ -165,8 +165,8 @@ def calc_dist(pops_list, simulation, path_freqs, path_output, byalleles = True, 
     pops_len = len(pops_list)
     len_list = []
 
-    for race in pops_list:
-       len_list.append(sum(1 for line in open('output/freqs/freq_' + race + '.csv')))
+    #for race in pops_list:
+    #   len_list.append(sum(1 for line in open('output/freqs/freq_' + race + '.csv')))
 
     set_cala = set()
     dist_matrix = np.zeros(([pops_len, pops_len]))
@@ -201,6 +201,9 @@ def calc_dist(pops_list, simulation, path_freqs, path_output, byalleles = True, 
 
     d = pd.DataFrame(dist_matrix, index=pops_list, columns=pops_list)
 
+    #if path not exists, create it
+    pathlib.Path(f'{path_output}/dist_matrix').mkdir(parents=True, exist_ok=True)
+    
     d.to_excel(f'{path_output}/dist_matrix/dist_matrix_{simulation}.xlsx')  ##check end
 
     pickle.dump(dist_matrix, open(f'{path_output}/dist_matrix/dist_matrix_{simulation}.pkl', "wb"))
