@@ -163,10 +163,6 @@ def calc_euclidain_dist(file_real_freq, em_file):
 
 def calc_dist(pops_list, simulation, path_freqs, path_output, byalleles = True, ed_dist = True):
     pops_len = len(pops_list)
-    len_list = []
-
-    for race in pops_list:
-       len_list.append(sum(1 for line in open('output/freqs/freq_' + race + '.csv')))
 
     set_cala = set()
     dist_matrix = np.zeros(([pops_len, pops_len]))
