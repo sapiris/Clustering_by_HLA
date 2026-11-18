@@ -96,9 +96,7 @@ def estimate_freqs(typing_path, f_races_size_path, path_to_freqs,  size_threshol
     print("num_samples_from_freqs", num_samples)
     lines.close()
 
-    """f_oo = open("data/Israel/race_size_by_typing2.csv", "w")
-    for race, size in dict_race_count.items():
-        f_oo.write(f"{race},{size}\n")"""
+
     # calculate the probability of each haplotype and write to file
     for r, dict_loci in dict_race_loci.items():
         write_freqs_to_file(dict_loci, haps_count[r], r,f"{path_to_freqs}/hpf_allele_{r}.csv")
