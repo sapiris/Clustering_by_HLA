@@ -28,10 +28,15 @@ def add_haps_to_dict(dict_loci, phases_list, num_races):
     return sum  # , dict_loci
 
 
-def write_freqs_to_file(dict_loci, sum, pop, freq_file):
+def write_freqs_to_file(dict_loci, sum_, pop, freq_file):
+    print(pop)
+    # dict_loci = dict(
+    #     sorted(dict_loci.items(), key=lambda item: item[1], reverse=True)[:min(len(dict_loci), 1000000)]
+    # )
+    # sum_ = sum(dict_loci.values())
     f_freq = open(freq_file, 'w')
     for hap in dict_loci:
-        f_freq.write(hap + ',' + pop + ',' + str(dict_loci[hap] / sum) + '\n')
+        f_freq.write(hap + ',' + pop + ',' + str(dict_loci[hap] / sum_) + '\n')
 
     f_freq.close()
 
@@ -43,6 +48,7 @@ def is_full_haplo(hap):
 
 
 def estimate_freqs(typing_path, f_races_size_path, path_to_freqs,  size_threshold = 50):
+    #print("start")
     haps_count = {}
     imputation = Imputation()
     dict_race_loci = {}
@@ -59,12 +65,15 @@ def estimate_freqs(typing_path, f_races_size_path, path_to_freqs,  size_threshol
 
     f_races_size = open(f_races_size_path, "w")
     list_include = []
+    is_all_pop_over_threshold = True
     for r, size in dict_race_size.items():
         if size > size_threshold:
             dict_race_loci[r] = {}
             haps_count[r] = 0
             list_include.append(r)
             f_races_size.write(f"{r},{size}\n")
+        else:
+            is_all_pop_over_threshold = False
 
     num_samples = 0
     dict_race_count = {}
@@ -96,9 +105,13 @@ def estimate_freqs(typing_path, f_races_size_path, path_to_freqs,  size_threshol
     print("num_samples_from_freqs", num_samples)
     lines.close()
 
-
+    """f_oo = open("data/Israel/race_size_by_typing2.csv", "w")
+    for race, size in dict_race_count.items():
+        f_oo.write(f"{race},{size}\n")"""
     # calculate the probability of each haplotype and write to file
     for r, dict_loci in dict_race_loci.items():
         write_freqs_to_file(dict_loci, haps_count[r], r,f"{path_to_freqs}/hpf_allele_{r}.csv")
+
+    return is_all_pop_over_threshold
 
 
