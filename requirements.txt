@@ -1,0 +1,3 @@
+openpyxl
+networkx
+py-graph-em @ git+https://github.com/sapiris/py-graph-em.git
