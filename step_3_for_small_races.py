@@ -1,12 +1,15 @@
 import json
 
-def assign_small_races(config_file, num_of_cluster, output_clustering, simulation):
+
+
+
+def assign_small_races(config_file, num_of_cluster, output_clustering, input_typing):
         with open(config_file) as f:
             json_conf = json.load(f)
 
         output_dir = json_conf.get("imputation_out_path", "output") + "/"
         config = {
-            "imputation_input_file": json_conf.get("input_file"),#imputation_in
+            "imputation_input_file": input_typing,#imputation_in
             "imputation_out_hap_freq_file": output_dir + json_conf.get("imputation_out_hap_freq_filename"),
             "pops": json_conf.get("populations"),
             # "KL_freq_file_to_compare": json_conf.get("KL_file_to_compare"),
@@ -40,10 +43,12 @@ def assign_small_races(config_file, num_of_cluster, output_clustering, simulatio
                 # find the all results of single person
                 # sum the prob of single person
                 while (res and res.split(",")[0] == id):
+                    #print(res)
                     res = res.split(",")
                     p = float(res[3])
                     sum += p
                     p = p/2
+                    #print(res[1])
                     race1 = res[1].split(';')[1]
                     race2 = res[2].split(';')[1]
                     list_person[list_finel_races.index(race1)] += p
@@ -83,19 +88,21 @@ def assign_small_races(config_file, num_of_cluster, output_clustering, simulatio
         dict_my_map = {}
         """for pop in list_finel_races:
             dict_my_map[pop] = pop"""
-        with open(f'{output_clustering}/{num_of_cluster}clusters_{simulation}.csv') as race_cluster: #todo add name file
+        dict_clustr_pop = {}
+        with open(f'{output_clustering}/{num_of_cluster}clusters.csv') as race_cluster: #todo add name file
             for line in race_cluster:
                 if "Cluster" in line:
                     continue
                 line = line.strip().split(',')
+                dict_clustr_pop[f"Cluster_{line[0]}"] = line[1]
                 list_races = line[1].split(';')
                 for race in list_races:
                     dict_my_map[race] = 'Cluster_' + str(line[0])
         race_cluster.close()
 
 
-        f_res = open(f'{output_clustering}/check_pop_clusters_IL_{simulation}cluster_ward.csv', 'w')
-        f_res.write('race_by_EzMi,')
+        f_res = open(f'{output_clustering}/check_pop_clusters_ward.csv', 'w')
+        f_res.write('SIRE,')
         for i in range(num_of_cluster):
             f_res.write(f'prob_to_Cluster_{i},')
         f_res.write ('cluster with max prob, my tag,match\n')
@@ -118,6 +125,12 @@ def assign_small_races(config_file, num_of_cluster, output_clustering, simulatio
                     line += ',0'
             else:
                 line += ','
+                dict_clustr_pop[list_finel_races[idx]] += f';{key}'
+
             f_res.write(line + '\n')
         f_res.close()
         print(count)
+        f_out = open(f'{output_clustering}/{num_of_cluster}cluster_withsmallpop.csv', 'w')
+        f_out.write("Cluster,pops\n")
+        for k, v in dict_clustr_pop.items():
+            f_out.write(k + ',' + v + '\n')
