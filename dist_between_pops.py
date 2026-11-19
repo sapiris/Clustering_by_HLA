@@ -1,22 +1,12 @@
-import sys
 import os
 import numpy as np
-from collections import Counter
 import pickle
-import shutil
-import pathlib
 import pandas as pd
 import sys
 
 
-
 sys.path.insert(0, os.path.join(".."))
 import math
-import gzip
-# from validation.calc_KL import calc_KL as KL
-
-import json
-import argparse
 
 
 def calc_AF_dist(file_real_freq, em_file):
@@ -161,7 +151,7 @@ def calc_euclidain_dist(file_real_freq, em_file):
     return math.sqrt(sum_allele)  # , math.sqrt(sum)
 
 
-def calc_dist(pops_list, simulation, path_freqs, path_output, byalleles = True, ed_dist = True):
+def calc_dist(pops_list,  path_freqs, path_output, byalleles = True, ed_dist = True):
     pops_len = len(pops_list)
 
     set_cala = set()
@@ -197,16 +187,16 @@ def calc_dist(pops_list, simulation, path_freqs, path_output, byalleles = True, 
 
     d = pd.DataFrame(dist_matrix, index=pops_list, columns=pops_list)
 
-    d.to_excel(f'{path_output}/dist_matrix/dist_matrix_{simulation}.xlsx')  ##check end
+    d.to_excel(f'{path_output}/dist_matrix.xlsx')  ##check end
 
-    pickle.dump(dist_matrix, open(f'{path_output}/dist_matrix/dist_matrix_{simulation}.pkl', "wb"))
+    pickle.dump(dist_matrix, open(f'{path_output}/dist_matrix.pkl', "wb"))
 
 
     #return d
 
 
 
-def main(simulation, path_to_freqs, f_races_size_path, path_output):
+def main(path_to_freqs, f_races_size_path, path_output):
     list_include = []
     with open(f_races_size_path) as size_f:
         for line in size_f:
@@ -216,9 +206,8 @@ def main(simulation, path_to_freqs, f_races_size_path, path_output):
 
 
     #cut_off = 50  # clusters pops just with number of individuals bigger than this cut_off
-    print(simulation)
 
-    calc_dist(list_include, simulation, path_to_freqs, path_output, byalleles = True, ed_dist = True)
+    calc_dist(list_include, path_to_freqs, path_output, byalleles = True, ed_dist = True)
 
 
 
