@@ -1,0 +1,12 @@
+[project]
+name = "clustering-by-hla"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "networkx>=3.7",
+    "openpyxl>=3.1.5",
+    "py-graph-em",
+]
+
+[tool.uv.sources]
+py-graph-em = { git = "https://github.com/sapiris/py-graph-em.git" }
